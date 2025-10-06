@@ -12,9 +12,6 @@ Ce dossier contient tous les manifestes Kubernetes nécessaires pour déployer l
 4. **mongodb-service.yaml** - Service ClusterIP pour MongoDB
 5. **backend-deployment.yaml** - Déploiement du backend Node.js (2 réplicas)
 6. **backend-service.yaml** - Service NodePort pour le backend (port 30000)
-
-### Fichiers optionnels (bonus)
-
 7. **configmap.yaml** - ConfigMap pour la configuration du backend
 8. **ingress.yaml** - Ingress pour exposer l'application avec un nom de domaine
 
@@ -42,7 +39,7 @@ kubectl apply -f backend-service.yaml
 kubectl wait --for=condition=ready pod -l app=backend -n devops-tp --timeout=120s
 ```
 
-### Déploiement avec ConfigMap (optionnel)
+### Déploiement avec ConfigMap
 
 ```bash
 # Avant de déployer le backend, créer la ConfigMap
@@ -52,7 +49,7 @@ kubectl apply -f configmap.yaml
 # (voir exemple ci-dessous)
 ```
 
-### Déploiement avec Ingress (optionnel)
+### Déploiement avec Ingress
 
 ```bash
 # 1. Installer l'Ingress Controller (si pas déjà fait)
@@ -208,11 +205,3 @@ kubectl delete -f .
 # Ou supprimer le namespace entier
 kubectl delete namespace devops-tp
 ```
-
-## 📝 Notes importantes
-
-1. **ImagePullPolicy**: Le backend utilise `IfNotPresent` car l'image est construite localement avec Minikube
-2. **PersistentVolumeClaim**: Utilise le StorageClass par défaut du cluster
-3. **Probes**: Assurent que le backend est prêt avant de recevoir du trafic
-4. **Resources**: Les limites empêchent les pods de consommer trop de ressources
-5. **Namespace**: Tout est isolé dans le namespace `devops-tp`

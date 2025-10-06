@@ -7,11 +7,9 @@ Ce document présente la structure complète du projet et le rôle de chaque fic
 ```
 devops-tp/
 │
-├── 📄 README.md                    # Documentation principale (OBLIGATOIRE)
-├── 📄 QUICKSTART.md                # Guide de démarrage rapide
+├── 📄 README.md                    # Documentation principale
 ├── 📄 API-DOCUMENTATION.md         # Documentation complète de l'API
 ├── 📄 ARCHITECTURE.md              # Documentation technique et architecture
-├── 📄 CHECKLIST.md                 # Checklist de rendu du TP
 ├── 📄 PROJECT-STRUCTURE.md         # Ce fichier (structure du projet)
 │
 ├── 📄 .gitignore                   # Fichiers à ignorer par Git
@@ -53,10 +51,6 @@ devops-tp/
 
 ## 📋 Fichiers par catégorie
 
-### 🎯 Fichiers obligatoires pour le TP
-
-Ces fichiers sont **requis** pour la validation du TP :
-
 1. **README.md** - Documentation principale
 
    - Noms des membres du binôme
@@ -84,16 +78,10 @@ Ces fichiers sont **requis** pour la validation du TP :
    - `backend-deployment.yaml`
    - `backend-service.yaml`
 
-### ⭐ Fichiers bonus (améliorent la note)
-
-Ces fichiers ne sont pas obligatoires mais démontrent une meilleure maîtrise :
-
 - **Documentation avancée**
 
-  - `QUICKSTART.md` - Guide de démarrage rapide
   - `API-DOCUMENTATION.md` - Documentation complète de l'API
   - `ARCHITECTURE.md` - Architecture technique
-  - `CHECKLIST.md` - Checklist de rendu
   - `k8s/README.md` - Guide des manifestes Kubernetes
 
 - **Manifestes Kubernetes avancés**
@@ -103,10 +91,10 @@ Ces fichiers ne sont pas obligatoires mais démontrent une meilleure maîtrise :
 
 - **Scripts d'automatisation**
 
-  - `deploy.sh` / `deploy.ps1` - Déploiement automatisé
-  - `cleanup.sh` / `cleanup.ps1` - Nettoyage automatisé
-  - `test-api.sh` / `test-api.ps1` - Tests automatisés
-  - `init-git.sh` / `init-git.ps1` - Initialisation Git
+  - `deploy.sh` - Déploiement automatisé
+  - `cleanup.sh` - Nettoyage automatisé
+  - `test-api.sh` - Tests automatisés
+  - `init-git.sh` - Initialisation Git
 
 - **Configuration**
   - `.gitignore` - Fichiers à ignorer
@@ -117,7 +105,7 @@ Ces fichiers ne sont pas obligatoires mais démontrent une meilleure maîtrise :
 
 ### Documentation
 
-#### README.md (OBLIGATOIRE)
+#### README.md
 
 **Rôle** : Documentation principale du projet
 **Contenu** :
@@ -128,16 +116,6 @@ Ces fichiers ne sont pas obligatoires mais démontrent une meilleure maîtrise :
 - Instructions de déploiement Docker Compose
 - Instructions de déploiement Kubernetes
 - Exemples d'utilisation de l'API
-
-#### QUICKSTART.md
-
-**Rôle** : Guide rapide pour démarrer rapidement
-**Contenu** :
-
-- Installation avec Docker Compose
-- Installation avec Minikube
-- Tests de l'API
-- Commandes Kubernetes utiles
 
 #### API-DOCUMENTATION.md
 
@@ -159,17 +137,6 @@ Ces fichiers ne sont pas obligatoires mais démontrent une meilleure maîtrise :
 - Schémas d'infrastructure
 - Stratégies de déploiement
 - Performance et scalabilité
-
-#### CHECKLIST.md
-
-**Rôle** : Liste de vérification avant le rendu
-**Contenu** :
-
-- Fichiers à vérifier
-- Tests à effectuer
-- Validation du README
-- Préparation du dépôt Git
-- Email de rendu
 
 ### Code source
 
@@ -285,13 +252,13 @@ Ces fichiers ne sont pas obligatoires mais démontrent une meilleure maîtrise :
 **Port** : 3000
 **NodePort** : 30000
 
-#### k8s/configmap.yaml (Bonus)
+#### k8s/configmap.yaml
 
 **Rôle** : Centraliser la configuration
 **Ressource** : ConfigMap
 **Contenu** : Variables d'environnement du backend
 
-#### k8s/ingress.yaml (Bonus)
+#### k8s/ingress.yaml
 
 **Rôle** : Exposer l'application via HTTP
 **Ressource** : Ingress
@@ -342,4 +309,3 @@ Ces fichiers ne sont pas obligatoires mais démontrent une meilleure maîtrise :
 2. Initialiser le dépôt
 3. Configurer Git si nécessaire
 4. Créer le commit initial
-5. Afficher les prochaines étapes

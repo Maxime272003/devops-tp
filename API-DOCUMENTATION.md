@@ -336,11 +336,3 @@ curl -X DELETE http://localhost:3000/api/todos/[ID]
 ```
 
 ---
-
-## Notes importantes
-
-1. **Validation**: Le titre est obligatoire et ne peut dépasser 100 caractères
-2. **Timestamps**: Les champs `createdAt` et `updatedAt` sont gérés automatiquement
-3. **ObjectId**: MongoDB génère automatiquement un `_id` unique pour chaque tâche
-4. **CORS**: L'API accepte les requêtes de toutes origines (configuré pour le développement)
-5. **Format JSON**: Toutes les requêtes et réponses utilisent le format JSON
