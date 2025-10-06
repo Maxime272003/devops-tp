@@ -4,7 +4,7 @@ Ce dossier contient tous les manifestes Kubernetes nécessaires pour déployer l
 
 ## 📁 Structure des fichiers
 
-### Fichiers de base (requis)
+### Fichiers de base
 
 1. **namespace.yaml** - Crée le namespace `devops-tp`
 2. **mongodb-pvc.yaml** - PersistentVolumeClaim pour MongoDB (1Gi)
