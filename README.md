@@ -75,8 +75,8 @@ docker-compose up -d
 curl http://localhost:3000/api/health
 
 # 4. Créer une tâche
-curl -X POST http://localhost:3000/api/todos `
-  -H "Content-Type: application/json" `
+curl -X POST http://localhost:3000/api/todos \
+  -H "Content-Type: application/json" \
   -d '{"title":"Ma première tâche","description":"Test de l API"}'
 
 # 5. Arrêter l'application
@@ -106,35 +106,35 @@ minikube service backend-service -n devops-tp
 ### Créer une tâche
 
 ```bash
-curl -X POST http://localhost:58090/api/todos `
-  -H "Content-Type: application/json" `
+curl -X POST http://localhost:<PORT>/api/todos \
+  -H "Content-Type: application/json" \
   -d '{"title":"Ma première tâche","description":"Test de l API"}'
 ```
 
 ### Lister toutes les tâches
 
 ```bash
-curl http://localhost:58090/api/todos
+curl http://localhost:<PORT>/api/todos
 ```
 
 ### Récupérer une tâche par ID
 
 ```bash
-curl http://localhost:58090/api/todos/[ID_DE_LA_TACHE]
+curl http://localhost:<PORT>/api/todos/[ID_DE_LA_TACHE]
 ```
 
 ### Mettre à jour une tâche
 
 ```bash
-curl -X PUT http://localhost:58090/api/todos/[ID_DE_LA_TACHE] `
-  -H "Content-Type: application/json" `
+curl -X PUT http://localhost:<PORT>/api/todos/[ID_DE_LA_TACHE] \
+  -H "Content-Type: application/json" \
   -d '{"completed":true}'
 ```
 
 ### Supprimer une tâche
 
 ```bash
-curl -X DELETE http://localhost:58090/api/todos/[ID_DE_LA_TACHE]
+curl -X DELETE http://localhost:<PORT>/api/todos/[ID_DE_LA_TACHE]
 ```
 
 ## 🔍 Commandes utiles Kubernetes
