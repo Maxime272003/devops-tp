@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: todo-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=tododb
+    networks:
+      - todo-network
+
+  backend:
+    build: ./backend
+    container_name: todo-backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/tododb
+      - PORT=3000
+    depends_on:
+      - mongodb
+    networks:
+      - todo-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  todo-network:
+    driver: bridge
