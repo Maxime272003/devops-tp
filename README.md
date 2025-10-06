@@ -49,18 +49,6 @@ L'application est composée de deux conteneurs :
   ```
 - `DELETE /api/todos/:id` - Supprimer une tâche
 
-### Test avec curl ou Postman
-
-```bash
-# Créer une tâche
-curl -X POST http://localhost:3000/api/todos \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Faire les courses","description":"Acheter du pain"}'
-
-# Lister toutes les tâches
-curl http://localhost:3000/api/todos
-```
-
 ## Option 1 : Avec Docker Compose (Recommandé pour tester localement)
 
 ```bash
@@ -106,7 +94,7 @@ minikube service backend-service -n devops-tp
 ### Créer une tâche
 
 ```bash
-curl -X POST http://localhost:<PORT>/api/todos \
+curl -X POST http://localhost:[PORT]/api/todos \
   -H "Content-Type: application/json" \
   -d '{"title":"Ma première tâche","description":"Test de l API"}'
 ```
@@ -114,19 +102,19 @@ curl -X POST http://localhost:<PORT>/api/todos \
 ### Lister toutes les tâches
 
 ```bash
-curl http://localhost:<PORT>/api/todos
+curl http://localhost:[PORT]/api/todos
 ```
 
 ### Récupérer une tâche par ID
 
 ```bash
-curl http://localhost:<PORT>/api/todos/[ID_DE_LA_TACHE]
+curl http://localhost:[PORT]/api/todos/[ID_DE_LA_TACHE]
 ```
 
 ### Mettre à jour une tâche
 
 ```bash
-curl -X PUT http://localhost:<PORT>/api/todos/[ID_DE_LA_TACHE] \
+curl -X PUT http://localhost:[PORT]/api/todos/[ID_DE_LA_TACHE] \
   -H "Content-Type: application/json" \
   -d '{"completed":true}'
 ```
@@ -134,7 +122,7 @@ curl -X PUT http://localhost:<PORT>/api/todos/[ID_DE_LA_TACHE] \
 ### Supprimer une tâche
 
 ```bash
-curl -X DELETE http://localhost:<PORT>/api/todos/[ID_DE_LA_TACHE]
+curl -X DELETE http://localhost:[PORT]/api/todos/[ID_DE_LA_TACHE]
 ```
 
 ## 🔍 Commandes utiles Kubernetes
