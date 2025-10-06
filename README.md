@@ -73,7 +73,7 @@ curl http://localhost:3000/api/todos
 1. Cloner le dépôt :
 
 ```bash
-git clone [URL_DU_DEPOT]
+git clone https://github.com/Maxime272003/devops-tp.git
 cd devops-tp
 ```
 
