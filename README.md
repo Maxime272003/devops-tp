@@ -61,182 +61,132 @@ curl -X POST http://localhost:3000/api/todos \
 curl http://localhost:3000/api/todos
 ```
 
-## Déploiement local avec Docker Compose
-
-### Prérequis
-
-- Docker
-- Docker Compose
-
-### Étapes
-
-1. Cloner le dépôt :
+## Option 1 : Avec Docker Compose (Recommandé pour tester localement)
 
 ```bash
+# 1. Cloner le dépôt
 git clone https://github.com/Maxime272003/devops-tp.git
 cd devops-tp
-```
 
-2. Construire et lancer les conteneurs :
+# 2. Démarrer l'application
+docker-compose up -d
 
-```bash
-docker-compose up --build
-```
+# 3. Tester l'API
+curl http://localhost:3000/api/health
 
-3. L'API sera accessible sur `http://localhost:3000`
+# 4. Créer une tâche
+curl -X POST http://localhost:3000/api/todos `
+  -H "Content-Type: application/json" `
+  -d '{"title":"Ma première tâche","description":"Test de l API"}'
 
-4. Arrêter l'application :
-
-```bash
+# 5. Arrêter l'application
 docker-compose down
 ```
 
-## Déploiement sur Kubernetes
-
-### Prérequis
-
-- kubectl installé et configuré
-- Minikube (pour un cluster local) ou accès à un cluster Kubernetes
-
-### Déploiement avec Minikube
-
-1. Démarrer Minikube :
+### Option 2 : Avec Minikube (Pour Kubernetes)
 
 ```bash
+# 1. Démarrer Minikube
 minikube start
-```
 
-2. Construire les images Docker dans l'environnement Minikube :
+# 2. Exécuter le script de déploiement
+chmod +x deploy.sh
+./deploy.sh
 
-```bash
-# Utiliser le daemon Docker de Minikube
-eval $(minikube docker-env)
-
-# Construire l'image du backend
-docker build -t todo-backend:latest ./backend
-```
-
-3. Appliquer les manifestes Kubernetes :
-
-```bash
-# Créer le namespace
-kubectl apply -f k8s/namespace.yaml
-
-# Déployer MongoDB
-kubectl apply -f k8s/mongodb-pvc.yaml
-kubectl apply -f k8s/mongodb-deployment.yaml
-kubectl apply -f k8s/mongodb-service.yaml
-
-# Déployer le Backend
-kubectl apply -f k8s/backend-deployment.yaml
-kubectl apply -f k8s/backend-service.yaml
-```
-
-4. Vérifier le déploiement :
-
-```bash
-# Vérifier les pods
-kubectl get pods -n devops-tp
-
-# Vérifier les services
-kubectl get services -n devops-tp
-```
-
-5. Accéder à l'application :
-
-```bash
-# Avec Minikube
+# 3. Accéder à l'application
 minikube service backend-service -n devops-tp
 
-# Ou créer un tunnel
-kubectl port-forward service/backend-service 3000:3000 -n devops-tp
+# 4. Pour nettoyer
+./cleanup.sh
+
 ```
 
-### Déploiement sur un cluster public
+## 📝 Tests de l'API
 
-Si vous utilisez un cluster public (GKE, EKS, AKS), vous devrez :
-
-1. Pousser les images sur un registry public (Docker Hub, Google Container Registry, etc.) :
+### Créer une tâche
 
 ```bash
-# Tag et push de l'image
-docker tag todo-backend:latest [VOTRE_USERNAME]/todo-backend:latest
-docker push [VOTRE_USERNAME]/todo-backend:latest
+curl -X POST http://localhost:58090/api/todos `
+  -H "Content-Type: application/json" `
+  -d '{"title":"Ma première tâche","description":"Test de l API"}'
 ```
 
-2. Modifier les fichiers de déploiement pour utiliser l'image du registry :
-
-```yaml
-image: [VOTRE_USERNAME]/todo-backend:latest
-```
-
-3. Appliquer les manifestes comme indiqué ci-dessus
-
-### Commandes utiles
+### Lister toutes les tâches
 
 ```bash
-# Voir les logs d'un pod
-kubectl logs -f <POD_NAME> -n devops-tp
-
-# Obtenir des informations détaillées
-kubectl describe pod <POD_NAME> -n devops-tp
-
-# Supprimer le déploiement
-kubectl delete -f k8s/ -n devops-tp
-
-# Supprimer le namespace
-kubectl delete namespace devops-tp
+curl http://localhost:58090/api/todos
 ```
 
-## Structure du projet
-
-```
-devops-tp/
-├── backend/
-│   ├── src/
-│   │   ├── models/
-│   │   │   └── Todo.js
-│   │   ├── routes/
-│   │   │   └── todos.js
-│   │   └── server.js
-│   ├── Dockerfile
-│   └── package.json
-├── k8s/
-│   ├── namespace.yaml
-│   ├── mongodb-pvc.yaml
-│   ├── mongodb-deployment.yaml
-│   ├── mongodb-service.yaml
-│   ├── backend-deployment.yaml
-│   └── backend-service.yaml
-├── docker-compose.yml
-└── README.md
-```
-
-## Tests
-
-Pour tester que l'application fonctionne correctement :
-
-1. Vérifier le health check :
+### Récupérer une tâche par ID
 
 ```bash
-curl http://localhost:3000/api/health
+curl http://localhost:58090/api/todos/[ID_DE_LA_TACHE]
 ```
 
-2. Créer quelques tâches et vérifier la persistance :
+### Mettre à jour une tâche
 
 ```bash
-# Créer une tâche
-curl -X POST http://localhost:3000/api/todos \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Test","description":"Test de persistance"}'
+curl -X PUT http://localhost:58090/api/todos/[ID_DE_LA_TACHE] `
+  -H "Content-Type: application/json" `
+  -d '{"completed":true}'
+```
 
-# Redémarrer les pods
+### Supprimer une tâche
+
+```bash
+curl -X DELETE http://localhost:58090/api/todos/[ID_DE_LA_TACHE]
+```
+
+## 🔍 Commandes utiles Kubernetes
+
+```bash
+# Voir les pods
+kubectl get pods -n devops-tp
+
+# Voir les logs du backend
+kubectl logs -f deployment/backend-deployment -n devops-tp
+
+# Voir les logs de MongoDB
+kubectl logs -f deployment/mongodb-deployment -n devops-tp
+
+# Redémarrer un déploiement
 kubectl rollout restart deployment/backend-deployment -n devops-tp
 
-# Vérifier que les données sont toujours présentes
-curl http://localhost:3000/api/todos
+# Obtenir des informations détaillées
+kubectl describe pod [NOM_DU_POD] -n devops-tp
 ```
 
-## Licence
+## 🐛 Dépannage
 
-Ce projet est réalisé dans le cadre du TP Introduction DevOps.
+### Le backend ne démarre pas
+
+```bash
+# Vérifier les logs
+kubectl logs -f deployment/backend-deployment -n devops-tp
+
+# Vérifier que MongoDB est bien démarré
+kubectl get pods -n devops-tp -l app=mongodb
+```
+
+### Erreur de connexion à MongoDB
+
+```bash
+# Vérifier le service MongoDB
+kubectl get svc -n devops-tp
+
+# Tester la connectivité
+kubectl exec -it deployment/backend-deployment -n devops-tp -- sh
+# Puis dans le conteneur:
+# ping mongodb-service
+```
+
+### Reconstruire l'image Docker
+
+```bash
+# Sous Minikube
+eval $(minikube docker-env)
+docker build -t todo-backend:latest ./backend
+
+# Redémarrer le déploiement
+kubectl rollout restart deployment/backend-deployment -n devops-tp
+```
