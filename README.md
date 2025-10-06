@@ -33,13 +33,16 @@ L'application est composée de deux conteneurs :
 - `GET /api/todos` - Récupérer toutes les tâches
 - `GET /api/todos/:id` - Récupérer une tâche par ID
 - `POST /api/todos` - Créer une nouvelle tâche
+
   ```json
   {
     "title": "Ma tâche",
     "description": "Description de la tâche"
   }
   ```
+
 - `PUT /api/todos/:id` - Mettre à jour une tâche
+
   ```json
   {
     "title": "Titre modifié",
@@ -47,6 +50,7 @@ L'application est composée de deux conteneurs :
     "completed": true
   }
   ```
+
 - `DELETE /api/todos/:id` - Supprimer une tâche
 
 ## Option 1 : Avec Docker Compose (Recommandé pour tester localement)

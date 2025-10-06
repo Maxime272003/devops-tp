@@ -4,7 +4,7 @@ Ce document présente la structure complète du projet et le rôle de chaque fic
 
 ## 📁 Arborescence complète
 
-```
+```plaintext
 devops-tp/
 │
 ├── 📄 README.md                    # Documentation principale
