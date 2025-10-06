@@ -17,7 +17,6 @@ devops-tp/
 │
 ├── 📜 deploy.sh                    # Script de déploiement Kubernetes (Linux/Mac)
 ├── 📜 cleanup.sh                   # Script de nettoyage (Linux/Mac)
-├── 📜 test-api.sh                  # Script de test de l'API (Linux/Mac)
 ├── 📜 init-git.sh                  # Script d'initialisation Git (Linux/Mac)
 │
 ├── 📂 backend/                     # Code source du backend
@@ -93,7 +92,6 @@ devops-tp/
 
   - `deploy.sh` - Déploiement automatisé
   - `cleanup.sh` - Nettoyage automatisé
-  - `test-api.sh` - Tests automatisés
   - `init-git.sh` - Initialisation Git
 
 - **Configuration**
@@ -287,18 +285,6 @@ devops-tp/
 1. Supprimer tous les manifestes
 2. Supprimer le namespace
 3. Confirmer la suppression
-
-#### test-api.sh
-
-**Rôle** : Tester automatiquement l'API
-**Tests** :
-
-1. Health check
-2. Créer une tâche
-3. Lister les tâches
-4. Récupérer une tâche
-5. Mettre à jour une tâche
-6. Supprimer une tâche
 
 #### init-git.sh
 
