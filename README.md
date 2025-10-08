@@ -9,6 +9,8 @@
 
 Cette application est une API REST de gestion de tâches (Todo List) développée avec Node.js et Express, utilisant MongoDB comme base de données persistante.
 
+> **💡 Note pour Windows** : Les scripts `.sh` nécessitent Git Bash ou WSL. Les instructions PowerShell sont fournies dans la section Kubernetes.
+
 ### Fonctionnalités
 
 - Créer une nouvelle tâche
@@ -24,6 +26,26 @@ L'application est composée de deux conteneurs :
 
 1. **Backend Node.js** : API REST exposée sur le port 3000
 2. **MongoDB** : Base de données pour la persistance des données
+
+### Structure du projet
+
+```plaintext
+devops-tp/
+├── backend/              # Code source de l'API Node.js
+│   ├── src/
+│   │   ├── server.js     # Point d'entrée
+│   │   ├── models/       # Modèles Mongoose
+│   │   └── routes/       # Routes API
+│   ├── Dockerfile        # Image Docker du backend
+│   └── package.json      # Dépendances Node.js
+├── k8s/                  # Manifestes Kubernetes
+│   ├── namespace.yaml
+│   ├── mongodb-*.yaml
+│   └── backend-*.yaml
+├── docker-compose.yml    # Configuration Docker Compose
+├── deploy.sh            # Script de déploiement K8s
+└── cleanup.sh           # Script de nettoyage K8s
+```
 
 ## Utilisation de l'application
 
@@ -53,7 +75,9 @@ L'application est composée de deux conteneurs :
 
 - `DELETE /api/todos/:id` - Supprimer une tâche
 
-## Option 1 : Avec Docker Compose (Recommandé pour tester localement)
+## Déploiement
+
+### Option 1 : Avec Docker Compose (Recommandé pour tester localement)
 
 ```bash
 # 1. Cloner le dépôt
@@ -75,7 +99,9 @@ curl -X POST http://localhost:3000/api/todos \
 docker-compose down
 ```
 
-### Option 2 : Avec Minikube (Pour Kubernetes)
+## Option 2 : Avec Minikube (Pour Kubernetes)
+
+### Sous Linux/Mac/WSL
 
 ```bash
 # 1. Démarrer Minikube
@@ -89,11 +115,40 @@ chmod +x deploy.sh
 minikube service backend-service -n devops-tp
 
 # 4. Pour nettoyer
+chmod +x cleanup.sh
 ./cleanup.sh
+```
 
+### Sous Windows (PowerShell)
+
+```powershell
+# 1. Démarrer Minikube
+minikube start
+
+# 2. Déployer manuellement
+kubectl apply -f k8s/namespace.yaml
+kubectl apply -f k8s/mongodb-pvc.yaml
+kubectl apply -f k8s/mongodb-deployment.yaml
+kubectl apply -f k8s/mongodb-service.yaml
+kubectl apply -f k8s/backend-deployment.yaml
+kubectl apply -f k8s/backend-service.yaml
+
+# 3. Vérifier le déploiement
+kubectl get pods -n devops-tp
+
+# 4. Accéder à l'application
+minikube service backend-service -n devops-tp
+
+# 5. Pour nettoyer
+kubectl delete namespace devops-tp
 ```
 
 ## 📝 Tests de l'API
+
+> **Note** : Remplacez `[PORT]` par :
+>
+> - `3000` si vous utilisez Docker Compose
+> - Le port retourné par `minikube service backend-service -n devops-tp` pour Kubernetes (généralement 30000)
 
 ### Créer une tâche
 

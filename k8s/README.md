@@ -12,8 +12,6 @@ Ce dossier contient tous les manifestes Kubernetes nécessaires pour déployer l
 4. **mongodb-service.yaml** - Service ClusterIP pour MongoDB
 5. **backend-deployment.yaml** - Déploiement du backend Node.js (2 réplicas)
 6. **backend-service.yaml** - Service NodePort pour le backend (port 30000)
-7. **configmap.yaml** - ConfigMap pour la configuration du backend
-8. **ingress.yaml** - Ingress pour exposer l'application avec un nom de domaine
 
 ## 🚀 Ordre de déploiement
 
@@ -37,40 +35,6 @@ kubectl apply -f backend-service.yaml
 
 # 5. Attendre que le backend soit prêt
 kubectl wait --for=condition=ready pod -l app=backend -n devops-tp --timeout=120s
-```
-
-### Déploiement avec ConfigMap
-
-```bash
-# Avant de déployer le backend, créer la ConfigMap
-kubectl apply -f configmap.yaml
-
-# Puis modifier backend-deployment.yaml pour utiliser envFrom au lieu de env
-# (voir exemple ci-dessous)
-```
-
-### Déploiement avec Ingress
-
-```bash
-# 1. Installer l'Ingress Controller (si pas déjà fait)
-# Pour Minikube:
-minikube addons enable ingress
-
-# Pour un cluster standard:
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
-
-# 2. Déployer l'Ingress
-kubectl apply -f ingress.yaml
-
-# 3. Ajouter l'entrée dans /etc/hosts (ou C:\Windows\System32\drivers\etc\hosts)
-# Obtenir l'IP de Minikube:
-minikube ip
-
-# Ajouter dans hosts:
-# <MINIKUBE_IP> todo.local
-
-# 4. Accéder à l'application
-# http://todo.local
 ```
 
 ## 🔍 Vérification du déploiement
