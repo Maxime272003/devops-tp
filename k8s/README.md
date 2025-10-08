@@ -2,9 +2,9 @@
 
 Ce dossier contient tous les manifestes Kubernetes nécessaires pour déployer l'application Todo List.
 
-## 📁 Structure des fichiers
+> **💡 Conseil** : Pour un déploiement rapide, utilisez les scripts `deploy.sh` ou `cleanup.sh` à la racine du projet (Linux/Mac/WSL). Pour Windows PowerShell, suivez les instructions de déploiement manuel ci-dessous.
 
-### Fichiers de base
+## 📁 Fichiers disponibles
 
 1. **namespace.yaml** - Crée le namespace `devops-tp`
 2. **mongodb-pvc.yaml** - PersistentVolumeClaim pour MongoDB (1Gi)
@@ -15,26 +15,65 @@ Ce dossier contient tous les manifestes Kubernetes nécessaires pour déployer l
 
 ## 🚀 Ordre de déploiement
 
-### Déploiement de base
+### Méthode 1 : Avec le script (Linux/Mac/WSL)
 
 ```bash
-# 1. Créer le namespace
+cd ..  # Retour à la racine du projet
+./deploy.sh
+```
+
+### Méthode 2 : Déploiement manuel (PowerShell/Bash)
+
+> **💡 Note** : Les commandes `kubectl` fonctionnent de la même manière sous Windows PowerShell et Linux/Mac
+
+```bash
+# 1. Se placer dans le dossier k8s
+cd k8s
+
+# 2. Créer le namespace
 kubectl apply -f namespace.yaml
 
-# 2. Déployer la couche de persistance (MongoDB)
+# 3. Déployer la couche de persistance (MongoDB)
 kubectl apply -f mongodb-pvc.yaml
 kubectl apply -f mongodb-deployment.yaml
 kubectl apply -f mongodb-service.yaml
 
-# 3. Attendre que MongoDB soit prêt
+# 4. Attendre que MongoDB soit prêt
 kubectl wait --for=condition=ready pod -l app=mongodb -n devops-tp --timeout=120s
 
-# 4. Déployer le backend
+# 5. Déployer le backend
 kubectl apply -f backend-deployment.yaml
 kubectl apply -f backend-service.yaml
 
-# 5. Attendre que le backend soit prêt
+# 6. Attendre que le backend soit prêt
 kubectl wait --for=condition=ready pod -l app=backend -n devops-tp --timeout=120s
+```
+
+## 🌐 Accès à l'application
+
+### Avec Minikube
+
+```bash
+# Obtenir l'URL complète (ouvre automatiquement le navigateur)
+minikube service backend-service -n devops-tp
+
+# Ou obtenir juste l'URL
+minikube service backend-service -n devops-tp --url
+```
+
+### Avec kubectl port-forward
+
+```bash
+kubectl port-forward service/backend-service 3000:3000 -n devops-tp
+# Puis accéder à: http://localhost:3000/api/health
+```
+
+### Avec NodePort direct
+
+```bash
+# Obtenir l'IP de Minikube
+minikube ip
+# Puis accéder à: http://<MINIKUBE_IP>:30000/api/health
 ```
 
 ## 🔍 Vérification du déploiement
@@ -84,20 +123,6 @@ kubectl get events -n devops-tp --sort-by='.lastTimestamp'
   - Readiness: GET /api/health (démarrage après 10s)
 
 ## 🛠️ Modification des manifestes
-
-### Utiliser une ConfigMap pour les variables d'environnement
-
-Modifier `backend-deployment.yaml` :
-
-```yaml
-spec:
-  containers:
-    - name: backend
-      envFrom:
-        - configMapRef:
-            name: backend-config
-      # Supprimer la section env:
-```
 
 ### Changer le type de service
 
@@ -162,10 +187,21 @@ spec:
 
 ## 🧹 Nettoyage
 
+### Option A : Avec le script (Linux/Mac/WSL)
+
 ```bash
-# Supprimer tous les objets
+cd ..  # Retour à la racine du projet
+./cleanup.sh
+```
+
+### Option B : Nettoyage manuel
+
+```bash
+# Depuis le dossier k8s
 kubectl delete -f .
 
-# Ou supprimer le namespace entier
+# Ou supprimer le namespace entier (recommandé - supprime tout)
 kubectl delete namespace devops-tp
 ```
+
+> **⚠️ Note** : La suppression du namespace supprime automatiquement tous les objets qu'il contient (pods, services, PVC, etc.).
