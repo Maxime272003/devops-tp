@@ -112,7 +112,7 @@ chmod +x deploy.sh
 ./deploy.sh
 
 # 3. Accéder à l'application
-minikube service backend-service -n devops-tp
+minikube service frontend-service -n devops-tp
 
 # 4. Pour nettoyer
 chmod +x cleanup.sh

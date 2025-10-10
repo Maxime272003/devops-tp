@@ -25,9 +25,12 @@ if command -v minikube &> /dev/null; then
     eval $(minikube docker-env)
 fi
 
-# Construire l'image Docker
-echo "🏗️  Construction de l'image Docker..."
+# Construire les images Docker
+echo "🏗️  Construction de l'image Docker du backend..."
 docker build -t todo-backend:latest ./backend
+
+echo "🏗️  Construction de l'image Docker du frontend..."
+docker build -t todo-frontend:latest ./frontend
 
 # Créer le namespace
 echo "📦 Création du namespace..."
@@ -52,6 +55,15 @@ kubectl apply -f k8s/backend-service.yaml
 echo "⏳ Attente du démarrage du Backend..."
 kubectl wait --for=condition=ready pod -l app=backend -n devops-tp --timeout=120s
 
+# Déployer le Frontend
+echo "🎨 Déploiement du Frontend..."
+kubectl apply -f k8s/frontend-deployment.yaml
+kubectl apply -f k8s/frontend-service.yaml
+
+# Attendre que le frontend soit prêt
+echo "⏳ Attente du démarrage du Frontend..."
+kubectl wait --for=condition=ready pod -l app=frontend -n devops-tp --timeout=120s
+
 # Afficher le statut
 echo ""
 echo "✅ Déploiement terminé !"
@@ -66,8 +78,10 @@ kubectl get services -n devops-tp
 echo ""
 echo "🔗 Accès à l'application:"
 if command -v minikube &> /dev/null; then
-    echo "   Exécutez: minikube service backend-service -n devops-tp"
+    echo "   Frontend: minikube service frontend -n devops-tp"
+    echo "   Backend: minikube service backend -n devops-tp"
 else
-    echo "   Exécutez: kubectl port-forward service/backend-service 3000:3000 -n devops-tp"
-    echo "   Puis accédez à: http://localhost:3000"
+    echo "   Frontend: kubectl port-forward service/frontend 8080:80 -n devops-tp"
+    echo "   Backend: kubectl port-forward service/backend 3000:3000 -n devops-tp"
+    echo "   Puis accédez à: http://localhost:8080"
 fi
