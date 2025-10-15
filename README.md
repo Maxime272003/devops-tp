@@ -77,70 +77,19 @@ devops-tp/
 
 ## Déploiement
 
-### Option 1 : Avec Docker Compose (Recommandé pour tester localement)
-
 ```bash
 # 1. Cloner le dépôt
 git clone https://github.com/Maxime272003/devops-tp.git
 cd devops-tp
 
-# 2. Démarrer l'application
-docker-compose up -d
-
-# 3. Tester l'API
-curl http://localhost:3000/api/health
-
-# 4. Créer une tâche
-curl -X POST http://localhost:3000/api/todos \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Ma première tâche","description":"Test de l API"}'
-
-# 5. Arrêter l'application
-docker-compose down
-```
-
-## Option 2 : Avec Minikube (Pour Kubernetes)
-
-### Sous Linux/Mac/WSL
-
-```bash
-# 1. Démarrer Minikube
+# 2. Démarrer Minikube
 minikube start
 
-# 2. Exécuter le script de déploiement
-chmod +x deploy.sh
+# 3. Déployer l'application
 ./deploy.sh
 
-# 3. Accéder à l'application
-minikube service frontend-service -n devops-tp
-
-# 4. Pour nettoyer
-chmod +x cleanup.sh
+# 4. Arrêter et nettoyer
 ./cleanup.sh
-```
-
-### Sous Windows (PowerShell)
-
-```powershell
-# 1. Démarrer Minikube
-minikube start
-
-# 2. Déployer manuellement
-kubectl apply -f k8s/namespace.yaml
-kubectl apply -f k8s/mongodb-pvc.yaml
-kubectl apply -f k8s/mongodb-deployment.yaml
-kubectl apply -f k8s/mongodb-service.yaml
-kubectl apply -f k8s/backend-deployment.yaml
-kubectl apply -f k8s/backend-service.yaml
-
-# 3. Vérifier le déploiement
-kubectl get pods -n devops-tp
-
-# 4. Accéder à l'application
-minikube service backend-service -n devops-tp
-
-# 5. Pour nettoyer
-kubectl delete namespace devops-tp
 ```
 
 ## 📝 Tests de l'API
