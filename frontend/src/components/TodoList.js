@@ -13,10 +13,10 @@ const TodoList = ({ todos, onToggle, onDelete, onEdit, filter }) => {
       <div className="empty-state">
         <p>
           {filter === "active"
-            ? "🎉 Aucune tâche en cours !"
+            ? "Aucune tâche en cours"
             : filter === "completed"
-            ? "📝 Aucune tâche terminée"
-            : "📝 Aucune tâche pour le moment"}
+            ? "Aucune tâche terminée"
+            : "Aucune tâche pour le moment"}
         </p>
       </div>
     );

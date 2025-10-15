@@ -116,7 +116,7 @@ function App() {
     <div className="app">
       <header className="app-header">
         <div className="container">
-          <h1>📝 Todo List App</h1>
+          <h1>Todo List App</h1>
           <div className="api-status">
             <span
               className={`status-indicator ${apiStatus}`}
@@ -124,7 +124,8 @@ function App() {
                 apiStatus === "connected" ? "connectée" : "déconnectée"
               }`}
             >
-              {apiStatus === "connected" ? "🟢" : "🔴"}
+              <span className={`status-dot ${apiStatus}`}></span>
+              {apiStatus === "connected" ? "Connecté" : "Déconnecté"}
             </span>
           </div>
         </div>
@@ -156,7 +157,7 @@ function App() {
         </div>
 
         <div className="card">
-          <h2>{editingTodo ? "✏️ Modifier la tâche" : "➕ Nouvelle tâche"}</h2>
+          <h2>{editingTodo ? "Modifier la tâche" : "Nouvelle tâche"}</h2>
           <TodoForm
             onSubmit={handleSubmit}
             editingTodo={editingTodo}

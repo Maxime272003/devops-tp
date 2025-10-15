@@ -49,7 +49,7 @@ const TodoForm = ({ onSubmit, editingTodo, onCancelEdit }) => {
       </div>
       <div className="form-actions">
         <button type="submit" className="btn btn-primary">
-          {editingTodo ? "✅ Mettre à jour" : "➕ Ajouter"}
+          {editingTodo ? "Mettre à jour" : "Ajouter"}
         </button>
         {editingTodo && (
           <button
@@ -57,7 +57,7 @@ const TodoForm = ({ onSubmit, editingTodo, onCancelEdit }) => {
             onClick={handleCancel}
             className="btn btn-secondary"
           >
-            ❌ Annuler
+            Annuler
           </button>
         )}
       </div>

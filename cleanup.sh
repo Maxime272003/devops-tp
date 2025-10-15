@@ -21,5 +21,8 @@ sleep 5
 echo "📦 Suppression du namespace..."
 kubectl delete namespace devops-tp --ignore-not-found=true
 
+# Supprimer minikube
+minikube delete
+
 echo ""
 echo "✅ Nettoyage terminé !"

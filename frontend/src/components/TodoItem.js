@@ -26,14 +26,14 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit }) => {
           className="btn btn-edit"
           title="Modifier"
         >
-          ✏️
+          Modifier
         </button>
         <button
           onClick={() => onDelete(todo._id)}
           className="btn btn-delete"
           title="Supprimer"
         >
-          🗑️
+          Supprimer
         </button>
       </div>
     </div>
