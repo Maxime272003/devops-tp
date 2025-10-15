@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: todo-frontend:latest
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/maxime272003/todo-frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
               name: http

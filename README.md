@@ -31,6 +31,11 @@ L'application est composée de deux conteneurs :
 
 ```plaintext
 devops-tp/
+├── .github/              # Configuration GitHub Actions
+│   ├── workflows/        # Workflows CI/CD
+│   │   ├── build-backend.yml
+│   │   └── build-frontend.yml
+│   └── CI-CD.md         # Documentation CI/CD
 ├── backend/              # Code source de l'API Node.js
 │   ├── src/
 │   │   ├── server.js     # Point d'entrée
@@ -38,10 +43,15 @@ devops-tp/
 │   │   └── routes/       # Routes API
 │   ├── Dockerfile        # Image Docker du backend
 │   └── package.json      # Dépendances Node.js
+├── frontend/             # Code source du frontend React
+│   ├── src/
+│   ├── Dockerfile
+│   └── package.json
 ├── k8s/                  # Manifestes Kubernetes
 │   ├── namespace.yaml
 │   ├── mongodb-*.yaml
-│   └── backend-*.yaml
+│   ├── backend-*.yaml
+│   └── frontend-*.yaml
 ├── docker-compose.yml    # Configuration Docker Compose
 ├── deploy.sh            # Script de déploiement K8s
 └── cleanup.sh           # Script de nettoyage K8s
@@ -75,6 +85,51 @@ devops-tp/
 
 - `DELETE /api/todos/:id` - Supprimer une tâche
 
+## CI/CD - Intégration Continue
+
+Ce projet utilise **GitHub Actions** pour automatiquement builder et publier les images Docker sur GitHub Container Registry à chaque push sur la branche `master`.
+
+### 🔄 Workflow CI/CD
+
+```
+┌─────────────────┐
+│  Git Push       │
+│  (backend/* ou  │
+│   frontend/*)   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ GitHub Actions  │
+│ - Build image   │
+│ - Run tests     │
+│ - Push to ghcr  │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   ghcr.io       │
+│  (Registre)     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  ./deploy.sh    │
+│ - Pull images   │
+│ - Deploy to K8s │
+└─────────────────┘
+```
+
+**Caractéristiques :**
+
+- 📦 Les images sont automatiquement buildées lors de modifications dans `backend/` ou `frontend/`
+- 🚀 Les images sont publiées sur `ghcr.io/maxime272003/todo-backend` et `ghcr.io/maxime272003/todo-frontend`
+- 🔄 Le script `deploy.sh` télécharge automatiquement les dernières images
+- 🏷️ Chaque image est taggée avec le SHA du commit + `latest`
+
+> 📖 Pour plus de détails sur la configuration CI/CD, consultez [.github/CI-CD.md](.github/CI-CD.md)  
+> ⚙️ Pour configurer les permissions GitHub, consultez [.github/SETUP.md](.github/SETUP.md)
+
 ## Déploiement
 
 ```bash
@@ -85,12 +140,14 @@ cd devops-tp
 # 2. Démarrer Minikube
 minikube start
 
-# 3. Déployer l'application
+# 3. Déployer l'application (télécharge les images depuis ghcr.io)
 ./deploy.sh
 
 # 4. Arrêter et nettoyer
 ./cleanup.sh
 ```
+
+> **💡 Avantage** : Plus besoin de builder les images localement ! Le script télécharge directement les images pré-buildées par GitHub Actions, ce qui accélère considérablement le déploiement.
 
 ## 📝 Tests de l'API
 
@@ -176,13 +233,30 @@ kubectl exec -it deployment/backend-deployment -n devops-tp -- sh
 # ping mongodb-service
 ```
 
-### Reconstruire l'image Docker
+### Forcer le rechargement des images
 
 ```bash
-# Sous Minikube
-eval $(minikube docker-env)
-docker build -t todo-backend:latest ./backend
-
-# Redémarrer le déploiement
+# Forcer Kubernetes à télécharger la dernière version
 kubectl rollout restart deployment/backend-deployment -n devops-tp
+kubectl rollout restart deployment/frontend-deployment -n devops-tp
+
+# Ou redéployer complètement
+./cleanup.sh
+./deploy.sh
 ```
+
+### Les images ne se téléchargent pas
+
+Si les images Docker sont privées sur GitHub Container Registry :
+
+```bash
+# Authentification Docker avec GitHub
+docker login ghcr.io
+# Username: votre-username-github
+# Password: votre-personal-access-token
+
+# Puis redéployer
+./deploy.sh
+```
+
+> 📖 Voir [.github/SETUP.md](.github/SETUP.md) pour configurer les permissions GitHub

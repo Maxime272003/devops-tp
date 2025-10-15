@@ -19,18 +19,12 @@ if command -v minikube &> /dev/null; then
         echo "⚠️  Minikube n'est pas démarré. Démarrage..."
         minikube start
     fi
-    
-    # Utiliser le Docker daemon de Minikube
-    echo "🔧 Configuration de l'environnement Docker de Minikube"
-    eval $(minikube docker-env)
 fi
 
-# Construire les images Docker
-echo "🏗️  Construction de l'image Docker du backend..."
-docker build -t todo-backend:latest ./backend
-
-echo "🏗️  Construction de l'image Docker du frontend..."
-docker build -t todo-frontend:latest ./frontend
+# Pull des images depuis GitHub Container Registry
+echo "📥 Téléchargement des images Docker depuis GitHub Container Registry..."
+docker pull ghcr.io/maxime272003/todo-backend:latest || echo "⚠️  Image backend non disponible, le pod utilisera imagePullPolicy: Always"
+docker pull ghcr.io/maxime272003/todo-frontend:latest || echo "⚠️  Image frontend non disponible, le pod utilisera imagePullPolicy: Always"
 
 # Créer le namespace
 echo "📦 Création du namespace..."
