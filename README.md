@@ -87,39 +87,6 @@ devops-tp/
 
 ## CI/CD - Intégration Continue
 
-Ce projet utilise **GitHub Actions** pour automatiquement builder et publier les images Docker sur GitHub Container Registry à chaque push sur la branche `master`.
-
-### 🔄 Workflow CI/CD
-
-```
-┌─────────────────┐
-│  Git Push       │
-│  (backend/* ou  │
-│   frontend/*)   │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ GitHub Actions  │
-│ - Build image   │
-│ - Run tests     │
-│ - Push to ghcr  │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│   ghcr.io       │
-│  (Registre)     │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  ./deploy.sh    │
-│ - Pull images   │
-│ - Deploy to K8s │
-└─────────────────┘
-```
-
 **Caractéristiques :**
 
 - 📦 Les images sont automatiquement buildées lors de modifications dans `backend/` ou `frontend/`
@@ -244,19 +211,3 @@ kubectl rollout restart deployment/frontend-deployment -n devops-tp
 ./cleanup.sh
 ./deploy.sh
 ```
-
-### Les images ne se téléchargent pas
-
-Si les images Docker sont privées sur GitHub Container Registry :
-
-```bash
-# Authentification Docker avec GitHub
-docker login ghcr.io
-# Username: votre-username-github
-# Password: votre-personal-access-token
-
-# Puis redéployer
-./deploy.sh
-```
-
-> 📖 Voir [.github/SETUP.md](.github/SETUP.md) pour configurer les permissions GitHub
